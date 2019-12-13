@@ -43,7 +43,6 @@ function factory(stream) {
         type: "NEW_MESSAGE",
         payload: message
       };
-
       const string = JSON.stringify(action);
       stream.send(string);
 

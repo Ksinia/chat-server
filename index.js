@@ -35,6 +35,7 @@ app.get("/stream", async (req, res, next) => {
       payload: messages
     };
 
+    // we need to stringify because json-sse uses string as a messages and uses array as an array of messages
     //serialize (convert array of massages into a string)
     const string = JSON.stringify(action);
     // prepare string for sending to clients as soon as they connect (like loading a gun)
