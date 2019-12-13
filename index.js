@@ -4,11 +4,19 @@ const MessageRouterFactory = require("./message/router");
 const bodyParser = require("body-parser");
 const Sse = require("json-sse");
 const Message = require("./message/model");
+const cors = require("cors");
 
 const port = 4000;
 
+const corsMiddleware = cors();
+app.use(corsMiddleware);
+
 const stream = new Sse();
 const MessageRouter = MessageRouterFactory(stream);
+
+const jsonParser = bodyParser.json();
+app.use(jsonParser);
+app.use(MessageRouter);
 
 app.get("/", (req, res) => {
   stream.send("hi");
@@ -31,9 +39,5 @@ app.get("/stream", async (req, res, next) => {
     next(error);
   }
 });
-
-const jsonParser = bodyParser.json();
-app.use(jsonParser);
-app.use(MessageRouter);
 
 app.listen(port, () => console.log(`Listening on port : ${port}`));
