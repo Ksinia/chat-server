@@ -18,11 +18,6 @@ const jsonParser = bodyParser.json();
 app.use(jsonParser);
 app.use(MessageRouter);
 
-app.get("/", (req, res) => {
-  stream.send("hi");
-  res.send("Hello");
-});
-
 //endpoint for connecting to a stream
 app.get("/stream", async (req, res, next) => {
   try {
