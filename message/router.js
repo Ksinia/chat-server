@@ -13,14 +13,33 @@ const router = new Router();
 
 // этот эндпойнт мы не будем использовать, он только для теста
 router.get("/message", async (req, res, next) => {
-  const messages = await Message.findAll();
-  res.send(messages);
+  try {
+    const messages = await Message.findAll();
+    res.send(messages);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // сейчас модно использовать async await
-router.post("/message", async (req, res, next) => {
-  const message = await Message.create(req.body);
-  res.send(message);
-});
+// router.post("/message", async (req, res, next) => {
+//   try {
+//     const message = await Message.create(req.body);
+//     res.send(message);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+//второй варинат написание того же без анонимных функций
+async function onPost(req, res, next) {
+  try {
+    const message = await Message.create(req.body);
+    res.send(message);
+  } catch (error) {
+    next(error);
+  }
+}
+router.post("/message", onPost);
 
 module.exports = router;
