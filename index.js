@@ -28,8 +28,15 @@ app.get("/stream", async (req, res, next) => {
   try {
     // get data from DB
     const messages = await Message.findAll();
+
+    // make action object
+    const action = {
+      type: "ALL_MESSAGES",
+      payload: messages
+    };
+
     //serialize (convert array of massages into a string)
-    const string = JSON.stringify(messages);
+    const string = JSON.stringify(action);
     // prepare string for sending to clients as soon as they connect (like loading a gun)
     stream.updateInit(string);
     // connect this user to the stream. You don't need to make res.send by yourself. Stream breaks the rule

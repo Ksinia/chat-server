@@ -37,8 +37,14 @@ function factory(stream) {
   async function onPost(req, res, next) {
     try {
       const message = await Message.create(req.body);
+      // we move action to the server! Because otherwise the client will not know
+      // what is coming from server in a stream
+      const action = {
+        type: "NEW_MESSAGE",
+        payload: message
+      };
 
-      const string = JSON.stringify(message);
+      const string = JSON.stringify(action);
       stream.send(string);
 
       res.send(message);
