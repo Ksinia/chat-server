@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 const databaseUrl = "postgres://postgres:secret@localhost:5432/postgres";
-const db = new Sequelize(databaseUrl);
+const db = new Sequelize(databaseUrl, { logging: false });
 
 db.sync({ force: false }) // dont delete data on sync
   .then(() => console.log("DB connected"));

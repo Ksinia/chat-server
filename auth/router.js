@@ -19,9 +19,10 @@ function login(res, name = null, password = null) {
         // 2. use bcrypt.compareSync to check the password against the stored hash
         else if (bcrypt.compareSync(password, user.password)) {
           // 3. if the password is correct, return a JWT with the userId of the user (user.id)
+          const jwt = toJWT({ userId: user.id });
           const action = {
             type: "LOGIN_SUCCESS",
-            payload: toJWT({ userId: user.id })
+            payload: { id: user.id, name: user.name, jwt: jwt }
           };
           const string = JSON.stringify(action);
           res.send(string);

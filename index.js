@@ -8,6 +8,7 @@ const cors = require("cors");
 const UserRouter = require("./user/router");
 // const { factory: AuthRouterFactory } = require("./auth/router");
 const { router: AuthRouter } = require("./auth/router");
+const User = require("./user/model");
 
 const port = 4000;
 
@@ -29,7 +30,9 @@ app.use(UserRouter);
 app.get("/stream", async (req, res, next) => {
   try {
     // get data from DB
-    const messages = await Message.findAll();
+    const messages = await Message.findAll({
+      include: { model: User, attributes: ["name"] }
+    });
 
     // make action object
     const action = {

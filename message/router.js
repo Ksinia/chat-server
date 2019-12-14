@@ -1,7 +1,8 @@
 const express = require("express");
 const Message = require("./model");
-
 const { Router } = express; //destructuring
+const authMiddleware = require("../auth/middleware");
+const User = require("../user/model");
 
 // функция, создающая роутер
 function factory(stream) {
@@ -36,7 +37,16 @@ function factory(stream) {
   //второй вариант написание того же без анонимных функций
   async function onPost(req, res, next) {
     try {
-      const message = await Message.create(req.body);
+      const message = await Message.create({
+        text: req.body.text,
+        userId: req.body.userId
+      });
+      const user = await User.findByPk(req.body.userId, {
+        attributes: ["name"]
+      });
+      message.dataValues.user = user.dataValues; // we can't write to messages directly,
+      // values are actually stored under dataValues key
+
       // we move action to the server! Because otherwise the client will not know
       // what is coming from server in a stream
       const action = {
@@ -50,7 +60,7 @@ function factory(stream) {
       next(error);
     }
   }
-  router.post("/message", onPost);
+  router.post("/message", authMiddleware, onPost);
 
   return router;
 }
