@@ -18,7 +18,7 @@ function factory(stream) {
         });
       } else {
         User.create(user)
-          .then(user => login(stream, res, user.name, user.password))
+          .then(user => login(res, user.name, req.body.password))
           .catch(error => next(error));
       }
     });

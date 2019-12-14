@@ -3,7 +3,7 @@ const { toJWT, toData } = require("./jwt");
 const User = require("../user/model");
 const bcrypt = require("bcrypt");
 
-function login(stream, res, name = null, password = null) {
+function login(res, name = null, password = null) {
   if (!name || !password) {
     res.status(400).send({
       message: "Please supply a valid name and password"
@@ -19,12 +19,9 @@ function login(stream, res, name = null, password = null) {
         // 2. use bcrypt.compareSync to check the password against the stored hash
         else if (bcrypt.compareSync(password, user.password)) {
           // 3. if the password is correct, return a JWT with the userId of the user (user.id)
-          const action = {
-            type: "LOGIN_SUCCESS",
-            payload: toJWT({ userId: user.id })
-          };
-          const string = JSON.stringify(action);
-          stream.send(string);
+          res.send({
+            jwt: toJWT({ userId: user.id })
+          });
         } else {
           res.status(400).send({
             message: "Password was incorrect"
@@ -46,7 +43,7 @@ function factory(stream) {
   router.post("/login", (req, res, next) => {
     const name = req.body.name;
     const password = req.body.password;
-    login(stream, res, name, password);
+    login(res, name, password);
   });
 
   return router;
