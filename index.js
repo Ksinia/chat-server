@@ -5,8 +5,9 @@ const bodyParser = require("body-parser");
 const Sse = require("json-sse");
 const Message = require("./message/model");
 const cors = require("cors");
-const UserRouterFactory = require("./user/router");
-const { factory: AuthRouterFactory } = require("./auth/router");
+const UserRouter = require("./user/router");
+// const { factory: AuthRouterFactory } = require("./auth/router");
+const { router: AuthRouter } = require("./auth/router");
 
 const port = 4000;
 
@@ -15,8 +16,8 @@ app.use(corsMiddleware);
 
 const stream = new Sse();
 const MessageRouter = MessageRouterFactory(stream);
-const AuthRouter = AuthRouterFactory(stream);
-const UserRouter = UserRouterFactory(stream);
+// const AuthRouter = AuthRouterFactory(stream);
+// const UserRouter = UserRouterFactory(stream);
 
 const jsonParser = bodyParser.json();
 app.use(jsonParser);

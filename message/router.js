@@ -45,8 +45,7 @@ function factory(stream) {
       };
       const string = JSON.stringify(action);
       stream.send(string);
-
-      // res.send(message);
+      res.send(message);
     } catch (error) {
       next(error);
     }

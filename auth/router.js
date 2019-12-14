@@ -19,9 +19,15 @@ function login(res, name = null, password = null) {
         // 2. use bcrypt.compareSync to check the password against the stored hash
         else if (bcrypt.compareSync(password, user.password)) {
           // 3. if the password is correct, return a JWT with the userId of the user (user.id)
-          res.send({
-            jwt: toJWT({ userId: user.id })
-          });
+          const action = {
+            type: "LOGIN_SUCCESS",
+            payload: toJWT({ userId: user.id })
+          };
+          const string = JSON.stringify(action);
+          res.send(string);
+          //   res.send({
+          //     jwt: toJWT({ userId: user.id })
+          //   });
         } else {
           res.status(400).send({
             message: "Password was incorrect"
@@ -37,15 +43,14 @@ function login(res, name = null, password = null) {
   }
 }
 
-function factory(stream) {
-  const router = new Router();
+const router = new Router();
 
-  router.post("/login", (req, res, next) => {
-    const name = req.body.name;
-    const password = req.body.password;
-    login(res, name, password);
-  });
+router.post("/login", (req, res, next) => {
+  const name = req.body.name;
+  const password = req.body.password;
+  login(res, name, password);
+});
 
-  return router;
-}
-module.exports = { factory, login };
+//   return router;
+
+module.exports = { router, login };
