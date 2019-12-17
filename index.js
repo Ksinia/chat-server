@@ -1,13 +1,13 @@
 const express = require("express");
 const app = express();
-const MessageRouterFactory = require("./message/router");
+const messageRouterFactory = require("./message/router");
 const bodyParser = require("body-parser");
 const Sse = require("json-sse");
 const Message = require("./message/model");
 const cors = require("cors");
-const UserRouter = require("./user/router");
+const userRouter = require("./user/router");
 // const { factory: AuthRouterFactory } = require("./auth/router");
-const { router: AuthRouter } = require("./auth/router");
+const { router: authRouter } = require("./auth/router");
 const User = require("./user/model");
 
 const port = 4000;
@@ -16,15 +16,13 @@ const corsMiddleware = cors();
 app.use(corsMiddleware);
 
 const stream = new Sse();
-const MessageRouter = MessageRouterFactory(stream);
-// const AuthRouter = AuthRouterFactory(stream);
-// const UserRouter = UserRouterFactory(stream);
+const messageRouter = messageRouterFactory(stream);
 
 const jsonParser = bodyParser.json();
 app.use(jsonParser);
-app.use(MessageRouter);
-app.use(AuthRouter);
-app.use(UserRouter);
+app.use(messageRouter);
+app.use(authRouter);
+app.use(userRouter);
 
 //endpoint for connecting to a stream
 app.get("/stream", async (req, res, next) => {
